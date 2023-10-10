@@ -40,6 +40,9 @@ dependencies {
     // NTP
     implementation 'commons-net:commons-net:3.9.0'
 
+    // gson
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
 
     // password encoder
     implementation 'org.springframework.security:spring-security-crypto'
