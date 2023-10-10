@@ -8,7 +8,35 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '21'
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+// Enable Java Preview (1)
+compileJava {
+    options.compilerArgs += [
+            '--enable-preview',
+            '-Amapstruct.defaultComponentModel=spring'
+    ]
+
+}
+
+// Enable Java Preview (2)
+compileTestJava {
+    options.compilerArgs += [
+            '--enable-preview',
+//                '-Amapstruct.defaultComponentModel=spring'
+    ]
+}
+
+// Enable Java Preview (3)
+test {
+    useJUnitPlatform()
+    jvmArgs([
+            '--enable-preview',
+//                '-Amapstruct.defaultComponentModel=spring'
+            '-Dspring.profiles.active=local'
+    ])
 }
 
 configurations {
@@ -46,6 +74,11 @@ dependencies {
 
     // password encoder
     implementation 'org.springframework.security:spring-security-crypto'
+
+    // Map Struct
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 }
 
 tasks.named('test') {
