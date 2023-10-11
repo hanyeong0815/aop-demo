@@ -1,15 +1,15 @@
 package com.example.demo.member.controller;
 
-import com.example.demo.member.domain.Member;
+import com.example.demo.member.domain.rdb.Member;
+import com.example.demo.member.domain.read_model.MemberReadModel.MemberLogInReadModel;
+import com.example.demo.member.dto.MemberLogInDto.MemberLogInRequestDto;
 import com.example.demo.member.dto.MemberSaveDto.MemberSaveRequestDto;
 import com.example.demo.member.dto.MemberSaveDto.MemberSaveResponseDto;
 import com.example.demo.member.mapper.MemberDtoMapper;
+import com.example.demo.member.usecase.MemberLogInUseCase;
 import com.example.demo.member.usecase.MemberSaveUseCase;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 

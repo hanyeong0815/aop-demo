@@ -65,6 +65,12 @@ dependencies {
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-mysql'
 
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // AOP
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
     // NTP
     implementation 'commons-net:commons-net:3.9.0'
 

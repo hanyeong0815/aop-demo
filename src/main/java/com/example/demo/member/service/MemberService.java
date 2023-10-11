@@ -1,8 +1,12 @@
 package com.example.demo.member.service;
 
-import com.example.demo.member.domain.Member;
+import com.example.demo.member.aspect.MemberLogInAspect;
+import com.example.demo.member.aspect.MemberSignUpAspect;
+import com.example.demo.member.domain.rdb.Member;
+import com.example.demo.member.domain.read_model.MemberReadModel.MemberLogInReadModel;
 import com.example.demo.member.exception.MemberErrorCode;
-import com.example.demo.member.repository.MemberRepository;
+import com.example.demo.member.repository.rdb.MemberRepository;
+import com.example.demo.member.usecase.MemberLogInUseCase;
 import com.example.demo.member.usecase.MemberSaveUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,17 +17,16 @@ import static com.example.demo.common.support.exception.support.Preconditions.va
 @Service
 @RequiredArgsConstructor
 public class MemberService implements MemberSaveUseCase {
+public class MemberService
+        implements
+        MemberSaveUseCase,
+{
     private final MemberRepository repository;
     private final PasswordEncoder encoder;
 
+    @MemberSignUpAspect
     @Override
     public Member save(Member member) {
-        boolean hasMember = repository.existsMemberByUsername(member.username);
-        validate(
-                hasMember,
-                MemberErrorCode.USERNAME_ALREADY_USED
-        );
-
         member.password = encoder.encode(member.password);
 
         return repository.save(member);

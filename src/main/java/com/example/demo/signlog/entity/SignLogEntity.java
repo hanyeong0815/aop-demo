@@ -1,7 +1,7 @@
-package com.example.demo.member.entity;
+package com.example.demo.signlog.entity;
 
-import com.example.demo.core.jpa.UuidBaseEntity;
-import com.example.demo.member.domain.type.MemberStatusType;
+import com.example.demo.core.jpa.BaseEntity;
+import com.example.demo.signlog.domain.type.SignType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,9 +11,10 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import static com.example.demo.member.support.MemberConstants.SCHEMA;
-import static com.example.demo.member.support.MemberConstants.TB_MEMBER;
+import static com.example.demo.signlog.support.SignLogConstants.TB_SIGN_LOG;
 
 @Entity
 @Builder
@@ -22,13 +23,12 @@ import static com.example.demo.member.support.MemberConstants.TB_MEMBER;
 @Table(
         schema = SCHEMA,
         catalog = SCHEMA,
-        name = TB_MEMBER
+        name = TB_SIGN_LOG
 )
-public class MemberEntity extends UuidBaseEntity {
+public class SignLogEntity extends BaseEntity {
+    public UUID memberId;
     public String username;
-    public String password;
-    public String name;
     @Enumerated(EnumType.STRING)
-    public MemberStatusType status;
-    public Instant createdAt;
+    public SignType eventType;
+    public Instant signAt;
 }
