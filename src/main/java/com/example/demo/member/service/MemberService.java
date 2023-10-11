@@ -16,10 +16,10 @@ import static com.example.demo.common.support.exception.support.Preconditions.va
 
 @Service
 @RequiredArgsConstructor
-public class MemberService implements MemberSaveUseCase {
 public class MemberService
         implements
         MemberSaveUseCase,
+        MemberLogInUseCase
 {
     private final MemberRepository repository;
     private final PasswordEncoder encoder;
@@ -30,5 +30,23 @@ public class MemberService
         member.password = encoder.encode(member.password);
 
         return repository.save(member);
+    }
+
+    @MemberLogInAspect
+    @Override
+    public MemberLogInReadModel logIn(Member member) {
+        Member findMember = repository.findByUsername(member.username)
+                .orElseThrow(MemberErrorCode.NO_SUCH_USER::defaultException);
+
+        boolean matchPw = encoder.matches(member.password, findMember.password);
+        validate(
+                matchPw,
+                MemberErrorCode.INVALID_USERNAME_OR_PASSWORD
+        );
+
+        return MemberLogInReadModel.builder()
+                .username(findMember.username)
+                .name(findMember.name)
+                .build();
     }
 }

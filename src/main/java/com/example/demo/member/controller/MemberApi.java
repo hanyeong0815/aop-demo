@@ -18,6 +18,7 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class MemberApi {
     private final MemberSaveUseCase memberSaveUseCase;
+    private final MemberLogInUseCase memberLogInUseCase;
     private final MemberDtoMapper mapper;
 
     @PostMapping("")
@@ -26,5 +27,11 @@ public class MemberApi {
         return mapper.from(
                 memberSaveUseCase.save(member)
         );
+    }
+
+    @GetMapping("login")
+    public MemberLogInReadModel login(@RequestBody MemberLogInRequestDto dto) {
+        Member member = mapper.from(dto);
+        return memberLogInUseCase.logIn(member);
     }
 }
