@@ -1,6 +1,5 @@
 package com.example.demo.member.aspect;
 
-import com.example.demo.common.support.exception.support.Preconditions;
 import com.example.demo.member.domain.rdb.Member;
 import com.example.demo.member.domain.redis.SignTry;
 import com.example.demo.member.domain.type.MemberStatusType;
@@ -25,13 +24,15 @@ public class LogInAspect {
 
     @Before(value = "@annotation(MemberLogInAspect) && args(member)")
     public void SignTry(Member member) {
-        signTryRepository.save(
-                SignTry.builder()
-                        .username(member.username)
-                        .tryCount(0)
-                        .ttl(30_000L)
-                        .build()
-        );
+        SignTry signTry = signTryRepository.findById(member.username)
+                .orElse(
+                        SignTry.builder()
+                                .username(member.username)
+                                .tryCount(0)
+                                .ttl(1_800_000L)
+                                .build()
+                );
+        signTryRepository.save(signTry);
     }
 
     @AfterThrowing(value = "@annotation(MemberLogInAspect) && args(member)")
@@ -41,7 +42,7 @@ public class LogInAspect {
                         SignTry.builder()
                                 .username(member.username)
                                 .tryCount(0)
-                                .ttl(30_000L)
+                                .ttl(1_800_000L)
                                 .build()
                 );
         signTry.tryCount++;
@@ -49,9 +50,10 @@ public class LogInAspect {
         if (savedSignTry.tryCount >= 5) {
             boolean updateMemberStatus = memberRepository.updateStatus(member.username, MemberStatusType.PROTECTED);
             validate(
-                    !updateMemberStatus,
+                    updateMemberStatus,
                     MemberErrorCode.NO_SUCH_USER
             );
+            signTryRepository.deleteById(member.username);
             throw MemberErrorCode.PROTECTED_ACCOUNT.defaultException();
         }
     }

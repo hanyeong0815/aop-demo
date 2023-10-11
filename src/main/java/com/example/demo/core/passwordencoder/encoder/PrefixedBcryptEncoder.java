@@ -21,4 +21,10 @@ public final class PrefixedBcryptEncoder extends BCryptPasswordEncoder {
 
         return encoded;
     }
+
+    @Override
+    public boolean matches(CharSequence rawPassword, String encodedPassword) {
+        encodedPassword = encodedPassword.replace("{bcrypt}", "");
+        return super.matches(rawPassword, encodedPassword);
+    }
 }

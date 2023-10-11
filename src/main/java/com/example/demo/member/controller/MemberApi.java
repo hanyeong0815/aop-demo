@@ -2,6 +2,7 @@ package com.example.demo.member.controller;
 
 import com.example.demo.member.domain.rdb.Member;
 import com.example.demo.member.domain.read_model.MemberReadModel.MemberLogInReadModel;
+import com.example.demo.member.domain.type.MemberStatusType;
 import com.example.demo.member.dto.MemberLogInDto.MemberLogInRequestDto;
 import com.example.demo.member.dto.MemberSaveDto.MemberSaveRequestDto;
 import com.example.demo.member.dto.MemberSaveDto.MemberSaveResponseDto;
@@ -23,7 +24,7 @@ public class MemberApi {
 
     @PostMapping("")
     public MemberSaveResponseDto memberSave(@RequestBody MemberSaveRequestDto dto) {
-        Member member = mapper.from(dto, Instant.now());
+        Member member = mapper.from(dto, MemberStatusType.ACTIVE, Instant.now());
         return mapper.from(
                 memberSaveUseCase.save(member)
         );

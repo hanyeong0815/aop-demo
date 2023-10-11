@@ -38,11 +38,15 @@ public class MemberService
         Member findMember = repository.findByUsername(member.username)
                 .orElseThrow(MemberErrorCode.NO_SUCH_USER::defaultException);
 
-        boolean matchPw = encoder.matches(member.password, findMember.password);
         validate(
-                matchPw,
-                MemberErrorCode.INVALID_USERNAME_OR_PASSWORD
+                !findMember.status.canSignIn,
+                MemberErrorCode.PROTECTED_ACCOUNT
         );
+
+        boolean matchPw = encoder.matches(member.password, findMember.password);
+        if (!matchPw) {
+            throw MemberErrorCode.INVALID_USERNAME_OR_PASSWORD.defaultException();
+        }
 
         return MemberLogInReadModel.builder()
                 .username(findMember.username)
